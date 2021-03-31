@@ -482,7 +482,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 400
+  MaxStep: 2000
   body: {fileID: 4845971001711034256}
   leg0Upper: {fileID: 4845971000902797647}
   leg0Lower: {fileID: 4845971000148713487}

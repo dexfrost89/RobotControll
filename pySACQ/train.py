@@ -101,7 +101,7 @@ if __name__ == '__main__':
     B = []
 
     # Environment is the lunar lander from OpenAI gym
-    env = UnityToGymWrapper(UnityEnvironment(file_name="RobotBalance.x86_64", seed=1, side_channels=[]), allow_multiple_obs=False)
+    env = UnityToGymWrapper(UnityEnvironment(file_name="RobotBalance.x86_64", seed=1, side_channels=[], no_graphics=True), allow_multiple_obs=False)
 
     # task scheduler is defined in tasks.py
     task = TaskScheduler()
