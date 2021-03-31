@@ -10,7 +10,6 @@ from mlagents_envs.environment import UnityEnvironment
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 from gym_unity.envs import UnityToGymWrapper
 
-
 # Add local files to path
 root_dir = Path.cwd()
 sys.path.append(str(root_dir))
@@ -102,7 +101,7 @@ if __name__ == '__main__':
     B = []
 
     # Environment is the lunar lander from OpenAI gym
-    env = UnityToGymWrapper(UnityEnvironment(file_name="/home/dexfrost89/build/RobotBalance.x86_64", seed=1, side_channels=[]), allow_multiple_obs=False)
+    env = UnityToGymWrapper(UnityEnvironment(file_name="RobotBalance.x86_64", seed=1, side_channels=[]), allow_multiple_obs=False)
 
     # task scheduler is defined in tasks.py
     task = TaskScheduler()

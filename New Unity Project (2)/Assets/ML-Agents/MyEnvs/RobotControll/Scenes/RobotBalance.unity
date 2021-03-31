@@ -482,7 +482,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 400
   body: {fileID: 4845971001711034256}
   leg0Upper: {fileID: 4845971000902797647}
   leg0Lower: {fileID: 4845971000148713487}
@@ -4224,7 +4224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 122
+    VectorObservationSize: 125
     NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 20

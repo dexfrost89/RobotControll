@@ -136,6 +136,20 @@ public class SpiderAgent : Agent
             sensor.AddObservation(((angles.y - degree_to_rad(previousFeetRotations[i].y)) % (2f * Mathf.PI)) / Time.fixedDeltaTime);
         }
 
+        float minimum = 100.0f;
+        Vector3 currentF = new Vector3(0, 0, 0);
+
+        for(int i = 0; i < 4; i++) {
+            d_fi[i] = (currentFeetPositions[i] - previousFeetPositions[i]) / Time.fixedDeltaTime;
+            if(minimum > currentFeetPositions[i].y) {
+                currentF = currentFeetPositions[i];
+                minimum = currentFeetPositions[i].y;
+            }
+        }
+
+        Vector3 d_F = (currentF - previousF) / Time.fixedDeltaTime;
+        sensor.AddObservation(d_F);
+
         previousFeetPositions[0] = foot0.transform.position;
         previousFeetPositions[1] = foot1.transform.position;
         previousFeetPositions[2] = foot2.transform.position;
@@ -145,6 +159,8 @@ public class SpiderAgent : Agent
         previousFeetRotations[2] = foot2.transform.rotation.eulerAngles;
         previousFeetRotations[3] = foot3.transform.rotation.eulerAngles;
         //8 * (1 + 3 + 1 + 3 + 1 + 1) + (1 + 3 + 1 + 3 + 1) + 4 * (3 + 1 + 3 + 1) + 1
+
+        previousF = currentF;
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -314,8 +330,6 @@ public class SpiderAgent : Agent
         for(int i = 0; i < 4; i++) {
             result += Vector3.Dot(direction, v_i_swing[i]);
         }
-
-        previousF = currentF;
 
         return r_tot(result / 6.0f);
     }

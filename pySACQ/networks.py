@@ -46,7 +46,7 @@ class IntentionCritic(IntentionBase):
 class IntentionActor(torch.nn.Module):
     """Generic class for a single intention head (used within actor/critic networks)"""
 
-    def __init__(self, input_size, hidden_size, output_size, non_linear, final_non_linear=torch.nn.functional.tanh, use_gpu=True):
+    def __init__(self, input_size, hidden_size, output_size, non_linear=torch.nn.ELU(), final_non_linear=torch.nn.Tanh(), use_gpu=True):
         super(IntentionActor, self).__init__()
         self.non_linear = non_linear
         self.final_non_linear = final_non_linear
@@ -56,9 +56,9 @@ class IntentionActor(torch.nn.Module):
         self.layer1 = torch.nn.Linear(input_size, hidden_size)
         self.final_layer1 = torch.nn.Linear(hidden_size, output_size)
         self.final_layer2 = torch.nn.Linear(hidden_size, output_size)
-
         self.clamp = torch.nn.Hardtanh(min_val=0.3, max_val=1.0)
         self.init_weights()
+
 
     def init_weights(self):
         # Initialize the other layers with xavier (still constant 0 bias)
@@ -139,7 +139,15 @@ class SQXNet(torch.nn.Module):
             one_hot_mask[np.arange(x.shape[0]), intention.numpy()] = 1
             mask_tensor = torch.autograd.Variable(torch.FloatTensor(one_hot_mask).unsqueeze(1), requires_grad=False)
             # Feed forward through all the intention heads and concatenate on new dimension
-            intention_out = torch.cat(list(head.forward(x).unsqueeze(2) for head in self.intention_nets), dim=2)
+            res = list(head.forward(x) for head in self.intention_nets)
+            if isinstance(res[0], tuple):
+                intention_out1 = torch.cat(list(head.forward(x)[0].unsqueeze(2) for head in self.intention_nets), dim=2)
+                intention_out2 = torch.cat(list(head.forward(x)[1].unsqueeze(2) for head in self.intention_nets), dim=2)
+                x = (intention_out1 * mask_tensor).sum(dim=2)
+                y = (intention_out2 * mask_tensor).sum(dim=2)
+                return x, y
+            else:
+                intention_out = torch.cat(list(head.forward(x).unsqueeze(2) for head in self.intention_nets), dim=2)
             # Multiply by the intention mask and sum in the final dimension to get the right output shape
             x = (intention_out * mask_tensor).sum(dim=2)
         return x
@@ -153,9 +161,9 @@ class Actor(SQXNet):
     """Class for policy (or actor) network"""
 
     def __init__(self,
-                 state_dim=360,
+                 state_dim=125 * 5,
                  base_hidden_size=200,
-                 num_intentions=1,
+                 num_intentions=2,
                  head_input_size=200,
                  head_hidden_size=100,
                  head_output_size=20,
@@ -198,8 +206,8 @@ class Critic(SQXNet):
     """Class for Q-function (or critic) network"""
 
     def __init__(self,
-                 num_intentions=1,
-                 state_dim=360,
+                 num_intentions=2,
+                 state_dim=125 * 5 + 20,
                  base_hidden_size=400,
                  head_input_size=400,
                  head_hidden_size=200,

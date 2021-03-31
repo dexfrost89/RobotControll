@@ -40,15 +40,16 @@ def act(actor, env, task, B, num_trajectories=10, task_period=30, writer=None):
                 task.sample()
             # Get the action from current actor policy
             actor.eval()
-            action, log_prob = actor.predict(np.expand_dims(obs, axis=0), 0, log_prob=True)
+            action, log_prob = actor.predict(np.expand_dims(obs, axis=0), task.current_task, log_prob=True)
             # Execute action and collect rewards for each task
             obs, gym_reward, done, _ = env.step(action[0])
             # # Modify the main task reward (the huge -100 and 100 values cause instability)
             # gym_reward /= 100.0
             # Reward is a vector of the reward for each task
-            reward = gym_reward
+            reward = task.reward(obs, gym_reward)
             if writer:
-                writer.add_scalar('train/reward/', reward, ACT_STEP)
+                for i, r in enumerate(reward):
+                    writer.add_scalar('train/reward/%s' % i, r, ACT_STEP)
             # group information into a step and add to current trajectory
             trajectory.append(Step(obs, action[0], log_prob[0], reward))
             num_steps += 1  # increment step counter
@@ -156,10 +157,6 @@ def _loss_retrace(trajectory, task, actor, critic, gamma=0.95):
     num_steps = len(trajectory)
     states = torch.FloatTensor([step.state for step in trajectory])
     rewards = torch.FloatTensor([step.reward for step in trajectory])
-    #print(torch.FloatTensor([step.action for step in trajectory]))
-    #print(torch.FloatTensor([step.action for step in trajectory]).shape)
-    #print(torch.FloatTensor([step.log_prob for step in trajectory]))
-    #print(torch.FloatTensor([step.log_prob for step in trajectory]).shape)
     actions = torch.stack([step.action for step in trajectory])
     log_probs = torch.stack([step.log_prob for step in trajectory])
     # Create an intention (task) mask for all possible intentions
@@ -170,13 +167,13 @@ def _loss_retrace(trajectory, task, actor, critic, gamma=0.95):
     # actions (for each task) for every state action pair in trajectory
     task_actions, task_log_prob = actor.forward(states, imask_task, log_prob=True)
     # Q-values (for each task) for every state and task-action pair in trajectory
-    critic_input = torch.cat([task_actions.data.float().unsqueeze(1), states], dim=1)
+    critic_input = torch.cat([task_actions.data.float(), states], dim=1)
     task_q = critic.forward(critic_input, imask_task)
     # Q-values (for each task) for every state and action pair in trajectory
     critic_input = torch.cat([actions, states], dim=1)
     traj_q = critic.predict(critic_input, imask_task)
     # Actor loss is log-prob weighted sum of Q values (for each task) given states from trajectory
-    actor_loss = - torch.sum(torch.autograd.Variable(task_q.data, requires_grad=False).squeeze(1) * task_log_prob)
+    actor_loss = - torch.sum(torch.autograd.Variable(task_q.data, requires_grad=False) * task_log_prob)
     actor_loss /= len(trajectory)  # Divide by the number of runs to prevent trajectory length from mattering
     # Calculation of retrace Q
     q_ret = torch.zeros_like(task_q.data)
@@ -189,9 +186,6 @@ def _loss_retrace(trajectory, task, actor, critic, gamma=0.95):
                 discount = gamma ** (j - i)
                 # Importance weights
                 cj = 1.0
-                for k in range(i, j):
-                    ck = min(abs(task_log_prob.data[start + k] / float(log_probs[k])), 1.0)
-                    cj *= ck
                 # Difference between the two q values
                 del_q = task_q.data[start + i] - traj_q[start + j]
                 # Retrace Q value is sum of discounted weighted rewards
@@ -246,9 +240,9 @@ def learn(actor, critic, task, B, num_learning_iterations=10, episode_batch_size
                 print('Loss not found')
                 return
             if writer:
-                writer.add_scalar('train/loss/actor', actor_loss.data[0], LEARN_STEP)
+                writer.add_scalar('train/loss/actor', actor_loss.item(), LEARN_STEP)
                 if loss not in ['policy_gradient']:
-                    writer.add_scalar('train/loss/critic', critic_loss.data[0], LEARN_STEP)
+                    writer.add_scalar('train/loss/critic', critic_loss.item(), LEARN_STEP)
             # compute gradients
             actor_loss.backward()
             if loss not in ['policy_gradient']:
