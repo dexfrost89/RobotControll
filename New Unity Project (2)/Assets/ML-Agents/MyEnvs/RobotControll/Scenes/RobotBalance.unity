@@ -322,9 +322,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!153 &155366138
 ConfigurableJoint:
@@ -482,7 +482,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 2000
+  MaxStep: 0
   body: {fileID: 4845971001711034256}
   leg0Upper: {fileID: 4845971000902797647}
   leg0Lower: {fileID: 4845971000148713487}
@@ -492,7 +492,7 @@ MonoBehaviour:
   leg2Lower: {fileID: 4845970999867705953}
   leg3Upper: {fileID: 4845971001333087983}
   leg3Lower: {fileID: 4845970999820907835}
-  useFootGroundedVisualization: 1
+  useFootGroundedVisualization: 0
   foot0: {fileID: 4845971001580508452}
   foot1: {fileID: 4845971000234274127}
   foot2: {fileID: 4845971000086449650}
@@ -502,8 +502,10 @@ MonoBehaviour:
   PreviousPosition: {x: 0, y: 0, z: 0}
   PreviousRotation: {x: 0, y: 0, z: 0}
   previousFeetPositions: []
+  previousFeetRotations: []
   previousF: {x: 0, y: 0, z: 0}
   currentFeetPositions: []
+  currentFeetRotations: []
   d_fi: []
   v_i_swing: []
 --- !u!1 &631056362
@@ -1026,9 +1028,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!153 &1508562773
 ConfigurableJoint:
@@ -1979,8 +1981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1513f8a85fedd47efba089213b7c5bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updatedByAgent: 1
-  transformToFollow: {fileID: 4845971001711034256}
+  updatedByAgent: 0
+  transformToFollow: {fileID: 0}
   targetToLookAt: {fileID: 0}
   heightOffset: 0
 --- !u!1 &4034393421382876310
@@ -3232,9 +3234,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!33 &4845971000785247141
 MeshFilter:
@@ -3488,9 +3490,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!114 &4845971000902797488
 MonoBehaviour:
@@ -3505,9 +3507,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!54 &4845971000902797489
 Rigidbody:
@@ -3993,9 +3995,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!54 &4845971001333087953
 Rigidbody:
@@ -4222,7 +4224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 72
+    VectorObservationSize: 122
     NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 20
@@ -4374,9 +4376,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  agentDoneOnGroundContact: 1
-  penalizeGroundContact: 1
-  groundContactPenalty: -1
+  agentDoneOnGroundContact: 0
+  penalizeGroundContact: 0
+  groundContactPenalty: 0
   touchingGround: 0
 --- !u!54 &4845971001711034261
 Rigidbody:
@@ -4828,11 +4830,11 @@ MonoBehaviour:
   RootBody: {fileID: 4845971001711034261}
   VirtualRoot: {fileID: 2270141184437626633}
   Settings:
-    UseModelSpaceTranslations: 1
-    UseModelSpaceRotations: 1
+    UseModelSpaceTranslations: 0
+    UseModelSpaceRotations: 0
     UseLocalSpaceTranslations: 0
-    UseLocalSpaceRotations: 1
-    UseModelSpaceLinearVelocity: 1
+    UseLocalSpaceRotations: 0
+    UseModelSpaceLinearVelocity: 0
     UseLocalSpaceLinearVelocity: 0
     UseJointPositionsAndAngles: 0
     UseJointForces: 0

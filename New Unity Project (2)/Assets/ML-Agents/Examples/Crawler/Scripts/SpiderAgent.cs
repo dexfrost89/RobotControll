@@ -40,14 +40,20 @@ public class SpiderAgent : Agent
 
     public override void Initialize()
     {
-        previousFeetPositions = new Vector3[6];
+        previousFeetPositions = new Vector3[4];
+        previousFeetRotations = new Vector3[4];
         previousFeetPositions[0] = foot0.transform.position;
         previousFeetPositions[1] = foot1.transform.position;
         previousFeetPositions[2] = foot2.transform.position;
         previousFeetPositions[3] = foot3.transform.position;
+        previousFeetRotations[0] = foot0.transform.rotation.eulerAngles;
+        previousFeetRotations[1] = foot1.transform.rotation.eulerAngles;
+        previousFeetRotations[2] = foot2.transform.rotation.eulerAngles;
+        previousFeetRotations[3] = foot3.transform.rotation.eulerAngles;
         //previousFeetPositions[4] = foot4.transform.position;
         //previousFeetPositions[5] = foot5.transform.position;
         currentFeetPositions = new Vector3[4];
+        currentFeetRotations = new Vector3[4];
         v_i_swing = new Vector3[4];
         d_fi = new Vector3[4];
 
@@ -82,7 +88,7 @@ public class SpiderAgent : Agent
     {
         sensor.AddObservation(bp.groundContact.touchingGround);
 
-        sensor.AddObservation((bp.rb.transform.position - bp.previousPos) / time.fixedDeltaTime);
+        sensor.AddObservation((bp.rb.transform.position - bp.previousPos) / Time.fixedDeltaTime);
 
         sensor.AddObservation(bp.rb.transform.position.y);
 
@@ -93,17 +99,18 @@ public class SpiderAgent : Agent
 
         sensor.AddObservation(angles);
 
-        sensor.AddObservation(((angles.y - degree_to_rad(bp.previousRot.y)) % (2f * Mathf.PI)) / time.fixedDeltaTime);
+        sensor.AddObservation(((angles.y - degree_to_rad(bp.previousRot.y)) % (2f * Mathf.PI)) / Time.fixedDeltaTime);
 
         if (bp.rb.transform != body)
         {
             sensor.AddObservation(bp.currentStrength / m_JdController.maxJointForceLimit);
         }
+        bp.previousPos = bp.rb.transform.position;
+        bp.previousRot = bp.rb.transform.rotation.eulerAngles;
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        
         RaycastHit hit;
         float maxRaycastDist = 10;
         if (Physics.Raycast(body.position, Vector3.down, out hit, maxRaycastDist))
@@ -117,7 +124,27 @@ public class SpiderAgent : Agent
         {
             CollectObservationBodyPart(bodyPart, sensor);
         }
-        //1 + (1 + 3 + 3) + 12 * (1 + 3 + 3 + 1) = 104
+
+        for(int i = 0; i < 4; i++) {
+            sensor.AddObservation((currentFeetPositions[i] - previousFeetPositions[i]) / Time.fixedDeltaTime);
+            sensor.AddObservation(currentFeetPositions[i].y);
+            Vector3 angles = currentFeetRotations[i];
+            angles.x = degree_to_rad(angles.x);
+            angles.y = degree_to_rad(angles.y);
+            angles.z = degree_to_rad(angles.z);
+            sensor.AddObservation(angles);
+            sensor.AddObservation(((angles.y - degree_to_rad(previousFeetRotations[i].y)) % (2f * Mathf.PI)) / Time.fixedDeltaTime);
+        }
+
+        previousFeetPositions[0] = foot0.transform.position;
+        previousFeetPositions[1] = foot1.transform.position;
+        previousFeetPositions[2] = foot2.transform.position;
+        previousFeetPositions[3] = foot3.transform.position;
+        previousFeetRotations[0] = foot0.transform.rotation.eulerAngles;
+        previousFeetRotations[1] = foot1.transform.rotation.eulerAngles;
+        previousFeetRotations[2] = foot2.transform.rotation.eulerAngles;
+        previousFeetRotations[3] = foot3.transform.rotation.eulerAngles;
+        //8 * (1 + 3 + 1 + 3 + 1 + 1) + (1 + 3 + 1 + 3 + 1) + 4 * (3 + 1 + 3 + 1) + 1
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -154,24 +181,22 @@ public class SpiderAgent : Agent
     }
 
     public Vector3 PreviousPosition, PreviousRotation;
-    public Vector3[] previousFeetPositions;
+    public Vector3[] previousFeetPositions, previousFeetRotations;
 
     private void FixedUpdate() {
         AddReward(r_walk(new Vector3(0, 0, 1.0f)));
         PreviousPosition = transform.position;
         PreviousRotation = transform.eulerAngles;
-        previousFeetPositions[0] = foot0.transform.position;
-        previousFeetPositions[1] = foot1.transform.position;
-        previousFeetPositions[2] = foot2.transform.position;
-        previousFeetPositions[3] = foot3.transform.position;
+        currentFeetPositions[0] = foot0.transform.position;
+        currentFeetPositions[1] = foot1.transform.position;
+        currentFeetPositions[2] = foot2.transform.position;
+        currentFeetPositions[3] = foot3.transform.position;
+        currentFeetRotations[0] = foot0.transform.rotation.eulerAngles;
+        currentFeetRotations[1] = foot1.transform.rotation.eulerAngles;
+        currentFeetRotations[2] = foot2.transform.rotation.eulerAngles;
+        currentFeetRotations[3] = foot3.transform.rotation.eulerAngles;
         //previousFeetPositions[4] = foot4.transform.position;
         //previousFeetPositions[5] = foot5.transform.position;
-
-        foreach (var bodyPart in m_JdController.bodyPartsDict.Values)
-        {
-            bodyPart.PreviousPosition = bodyPart.rb.position;
-            bodyPart.PreviousRotation = bodyPart.rb.rotation.eulerAngles;
-        }
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -250,7 +275,7 @@ public class SpiderAgent : Agent
     }
 
     public Vector3 previousF;
-    public Vector3[] currentFeetPositions, d_fi, v_i_swing;
+    public Vector3[] currentFeetPositions, currentFeetRotations, d_fi, v_i_swing;
 
     public float r_feet(Vector3 direction) {
         //v_i_swing

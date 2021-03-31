@@ -94,21 +94,21 @@ Library: lib_burst_generated
 --compilation-defines=NET_STANDARD_2_0
 --compilation-defines=CSHARP_7_OR_LATER
 --compilation-defines=CSHARP_7_3_OR_NEWER
---output=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Plugins/lib_burst_generated
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.TextMeshPro.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Mathematics.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/UnityEngine.Purchasing.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Burst.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Analytics.DataPrivacy.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.CommunicatorObjects.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.ONNX.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.Input.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.BurstBLAS.dll
---assembly-folder=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/
+--output=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Plugins/lib_burst_generated
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.TextMeshPro.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Mathematics.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/UnityEngine.Purchasing.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Burst.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Analytics.DataPrivacy.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.CommunicatorObjects.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.ONNX.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.Input.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.BurstBLAS.dll
+--assembly-folder=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+ReciprocalJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+ReciprocalJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--f9f581ec9d28555618b44b39fe6114a8
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+PowJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+PowJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--746fdff789a212f68d6c7dabec600f0a
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+ExpJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+ExpJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--cc96e7f3fd514634f09b518ce6b5fe2b
@@ -270,21 +270,21 @@ Library: lib_burst_generated
 --compilation-defines=NET_STANDARD_2_0
 --compilation-defines=CSHARP_7_OR_LATER
 --compilation-defines=CSHARP_7_3_OR_NEWER
---output=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Plugins/lib_burst_generated
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.TextMeshPro.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Mathematics.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/UnityEngine.Purchasing.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Burst.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Analytics.DataPrivacy.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.CommunicatorObjects.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.ONNX.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.Input.dll
---root-assembly=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.BurstBLAS.dll
---assembly-folder=/home/dexfrost89/New Unity Project (2)/Temp/StagingArea/Data/Managed/
+--output=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Plugins/lib_burst_generated
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.TextMeshPro.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Mathematics.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/UnityEngine.Purchasing.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Burst.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Analytics.DataPrivacy.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Assembly-CSharp.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.CommunicatorObjects.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.ONNX.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.ML-Agents.Extensions.Input.dll
+--root-assembly=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/Unity.Barracuda.BurstBLAS.dll
+--assembly-folder=/home/dexfrost89/repo/New Unity Project (2)/Temp/StagingArea/Data/Managed/
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+ReciprocalJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+ReciprocalJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--f9f581ec9d28555618b44b39fe6114a8
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+PowJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+PowJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--746fdff789a212f68d6c7dabec600f0a
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Unity.Barracuda.BurstCPUOps+ExpJob, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Unity.Barracuda.BurstCPUOps+ExpJob&, Unity.Barracuda, Version=1.3.1.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--cc96e7f3fd514634f09b518ce6b5fe2b
