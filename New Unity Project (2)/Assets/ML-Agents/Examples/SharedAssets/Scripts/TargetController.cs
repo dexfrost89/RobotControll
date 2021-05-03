@@ -25,7 +25,7 @@ namespace Unity.MLAgentsExamples
         public float fallDistance = 5; //distance below the starting height that will trigger a respawn 
 
 
-        private Vector3 m_startingPos; //the starting position of the target
+        public Vector3 m_startingPos; //the starting position of the target
         private Agent m_agentTouching; //the agent currently touching the target
 
         [System.Serializable]
@@ -54,7 +54,7 @@ namespace Unity.MLAgentsExamples
             m_startingPos = transform.position;
             if (respawnIfTouched)
             {
-                MoveTargetToRandomPosition();
+                //MoveTargetToRandomPosition();
             }
         }
 
@@ -64,8 +64,8 @@ namespace Unity.MLAgentsExamples
             {
                 if (transform.position.y < m_startingPos.y - fallDistance)
                 {
-                    Debug.Log($"{transform.name} Fell Off Platform");
-                    MoveTargetToRandomPosition();
+                    //Debug.Log($"{transform.name} Fell Off Platform");
+                    //MoveTargetToRandomPosition();
                 }
             }
         }
@@ -74,9 +74,11 @@ namespace Unity.MLAgentsExamples
         /// Moves target to a random position within specified radius.
         /// </summary>
         public void MoveTargetToRandomPosition()
-        {
+        {/*
             var newTargetPos = m_startingPos + (Random.insideUnitSphere * spawnRadius);
             newTargetPos.y = m_startingPos.y;
+            transform.position = newTargetPos;*/
+            var newTargetPos = new Vector3(Random.Range(-3.72f, -2.96f), 3.91f, Random.Range(-0.58f, 0.68f)) + m_startingPos;
             transform.position = newTargetPos;
         }
 
@@ -87,7 +89,7 @@ namespace Unity.MLAgentsExamples
                 onCollisionEnterEvent.Invoke(col);
                 if (respawnIfTouched)
                 {
-                    MoveTargetToRandomPosition();
+                    //MoveTargetToRandomPosition();
                 }
             }
         }
