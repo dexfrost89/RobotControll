@@ -23,7 +23,7 @@ env = UnityToGymWrapper(
     allow_multiple_obs=False)
 
 
-rec = WindowRecorder(window_name='Unity', output_dir_path='visual_logs/test/')
+rec = WindowRecorder(window_name='Unity', log_dir_path='visual_logs/', log_name='test')
 rec.start()
 
 for i in range(1):

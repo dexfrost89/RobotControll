@@ -73,3 +73,6 @@ crashlytics-build.properties
 # screen_recorder project
 /screen_recorder/
 /visual_logs/
+
+# python files
+**/__pycache__/
