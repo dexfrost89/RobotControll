@@ -72,10 +72,6 @@ public class CrawlerAgent : Agent
     public Transform leg0Lower;
     public Transform leg1Upper;
     public Transform leg1Lower;
-    public Transform leg2Upper;
-    public Transform leg2Lower;
-    public Transform leg3Upper;
-    public Transform leg3Lower;
 
     //This will be used as a stabilized model space reference point for observations
     //Because ragdolls can move erratically during training, using a stabilized reference transform improves learning
@@ -89,10 +85,6 @@ public class CrawlerAgent : Agent
     [Space(10)]
     public bool useFootGroundedVisualization;
 
-    public MeshRenderer foot0;
-    public MeshRenderer foot1;
-    public MeshRenderer foot2;
-    public MeshRenderer foot3;
     public Material groundedMaterial;
     public Material unGroundedMaterial;
 
@@ -110,10 +102,6 @@ public class CrawlerAgent : Agent
         m_JdController.SetupBodyPart(leg0Lower);
         m_JdController.SetupBodyPart(leg1Upper);
         m_JdController.SetupBodyPart(leg1Lower);
-        m_JdController.SetupBodyPart(leg2Upper);
-        m_JdController.SetupBodyPart(leg2Lower);
-        m_JdController.SetupBodyPart(leg3Upper);
-        m_JdController.SetupBodyPart(leg3Lower);
     }
 
     /// <summary>
@@ -258,22 +246,14 @@ public class CrawlerAgent : Agent
         // Pick a new target joint rotation
         bpDict[leg0Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
         bpDict[leg1Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg2Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg3Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
         bpDict[leg0Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
         bpDict[leg1Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
-        bpDict[leg2Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
-        bpDict[leg3Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
 
         // Update joint strength
         bpDict[leg0Upper].SetJointStrength(continuousActions[++i]);
         bpDict[leg1Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg2Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg3Upper].SetJointStrength(continuousActions[++i]);
         bpDict[leg0Lower].SetJointStrength(continuousActions[++i]);
         bpDict[leg1Lower].SetJointStrength(continuousActions[++i]);
-        bpDict[leg2Lower].SetJointStrength(continuousActions[++i]);
-        bpDict[leg3Lower].SetJointStrength(continuousActions[++i]);
     }
 
     void FixedUpdate()
@@ -282,7 +262,7 @@ public class CrawlerAgent : Agent
 
         // If enabled the feet will light up green when the foot is grounded.
         // This is just a visualization and isn't necessary for function
-        if (useFootGroundedVisualization)
+        /*if (useFootGroundedVisualization)
         {
             foot0.material = m_JdController.bodyPartsDict[leg0Lower].groundContact.touchingGround
                 ? groundedMaterial
@@ -290,13 +270,7 @@ public class CrawlerAgent : Agent
             foot1.material = m_JdController.bodyPartsDict[leg1Lower].groundContact.touchingGround
                 ? groundedMaterial
                 : unGroundedMaterial;
-            foot2.material = m_JdController.bodyPartsDict[leg2Lower].groundContact.touchingGround
-                ? groundedMaterial
-                : unGroundedMaterial;
-            foot3.material = m_JdController.bodyPartsDict[leg3Lower].groundContact.touchingGround
-                ? groundedMaterial
-                : unGroundedMaterial;
-        }
+        }*/
 
         var cubeForward = m_OrientationCube.transform.forward;
 

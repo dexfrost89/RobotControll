@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/ML-Agents/MyEnvs/RobotControll/Scenes/RobotBalance.unity
+- path: Assets/ML-Agents/MyEnvs/RobotControll/Scenes/Robot Hand.unity
   isLoaded: 1
   isActive: 1
