@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ML-Agents/MyEnvs/RobotControll/Scenes/RobotBalance.unity
-    guid: f5a1a91ab87b47910b8676ce99f98993
+    path: Assets/ML-Agents/MyEnvs/RobotControll/Scenes/Robot Hand.unity
+    guid: 2b2827eb9fb5c0e6e8c7c96cfcef966f
   m_configObjects: {}
