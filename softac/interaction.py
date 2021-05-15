@@ -1,6 +1,6 @@
 import sys
 from os import path
-from random import  randint
+from random import randint
 
 import numpy as np
 
@@ -16,22 +16,24 @@ from window_recorder import WindowRecorder
 env = UnityToGymWrapper(
     UnityEnvironment(
         file_name=path.join('build', 'RobotBalance.x86_64'),
+        # 'D:\\saves\\arm\\repo\\windows_build\\New Unity Project (2).exe'
         seed=1,
         side_channels=[],
         no_graphics=False),
     allow_multiple_obs=False)
 
-
-rec = WindowRecorder(window_name='Unity', log_dir_path='visual_logs/', log_name='test')
-rec.start()
+#rec = WindowRecorder(window_name='Unity', log_dir_path='visual_logs/', log_name='test')
+#rec.start()
 
 for i in range(1):
     obs = env.reset()
     for j in range(100):
-        act = np.array([randint(-1, 1) for k in range(20)], dtype=np.float64).reshape(-1, 20)
+        act = np.array([randint(-1, 1) for k in range(5)], dtype=np.float64).reshape(-1, 5)
         obs, reward, done, info = env.step(act)
         print(i, j)
+        if done:
+            env.reset()
 
-rec.finish()
+#rec.finish()
 
 print('The end!')

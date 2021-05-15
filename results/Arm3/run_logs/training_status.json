@@ -1,0 +1,23 @@
+{
+    "Arm": {
+        "checkpoints": [
+            {
+                "steps": 3690,
+                "file_path": "results\\Arm3\\Arm\\Arm-3690.onnx",
+                "reward": 230.34552481633216,
+                "creation_time": 1620848215.7003155
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3690,
+            "file_path": "results\\Arm3\\Arm.onnx",
+            "reward": 230.34552481633216,
+            "creation_time": 1620848215.7003155
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.25.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
