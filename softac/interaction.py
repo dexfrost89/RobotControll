@@ -13,10 +13,9 @@ from mlagents_envs.base_env import ActionTuple
 sys.path.insert(1, path.join(sys.path[0], path.pardir, 'screen_recorder'))
 from window_recorder import WindowRecorder
 
-
 env = UnityToGymWrapper(
     UnityEnvironment(
-        file_name='./build/RobotBalance.x86_64',
+        file_name=path.join('build', 'RobotBalance.x86_64'),
         seed=1,
         side_channels=[],
         no_graphics=False),
