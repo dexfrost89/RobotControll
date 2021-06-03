@@ -54,7 +54,7 @@ public class ArmAgent : Agent
         curangle = 0.0f;
         curGrip = 1f;
         gobj = Instantiate(tc.gameObject, transform);
-        gobj.GetComponent<TargetController>().m_startingPos = transform.position;
+        //gobj.GetComponent<TargetController>().m_startingPos = transform.position;
 
         m_JdController = GetComponent<JointDriveController>();
 
@@ -128,7 +128,7 @@ public class ArmAgent : Agent
         //poseTime = Time.time + 5;
         touched = false;
         gobj.GetComponent<TargetController>().MoveTargetToRandomPosition();
-        gobj.GetComponent<TargetController>().myAgent = this;
+        //gobj.GetComponent<TargetController>().myAgent = this;
         previous_target_pos = gobj.transform.position;
         next_target_pos = transform.position * 2 - previous_target_pos;
         next_target_pos.y = previous_target_pos.y;
@@ -333,7 +333,7 @@ public class ArmAgent : Agent
     }
     public void GetToPose3()
     {
-        gobj.GetComponent<TargetController>().untouched = false;
+        //gobj.GetComponent<TargetController>().untouched = false;
     }
 
     public float pose0Time, pose1Time, pose2Time, pose3Time, pose4Time;
@@ -437,7 +437,7 @@ public class ArmAgent : Agent
             }
             if (Input.GetKey(KeyCode.Space))
             {
-                gobj.GetComponent<TargetController>().untouched = false;
+                //gobj.GetComponent<TargetController>().untouched = false;
             }
         }
         else

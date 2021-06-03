@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3840539935788495952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 1}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -102,13 +102,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3840539935788495952}
   serializedVersion: 2
-  m_Mass: 0.01
-  m_Drag: 1
-  m_AngularDrag: 1
+  m_Mass: 5
+  m_Drag: 0
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 3
 --- !u!114 &3631016866778687563
 MonoBehaviour:
@@ -122,13 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8f113a8b8d94967b1b1782c549be81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  untouched: 0
   tagToDetect: agent
   spawnRadius: 40
   respawnIfTouched: 1
   respawnIfFallsOffPlatform: 1
   fallDistance: 5
-  m_startingPos: {x: 0, y: 0, z: 0}
   onTriggerEnterEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -147,8 +145,6 @@ MonoBehaviour:
   onCollisionExitEvent:
     m_PersistentCalls:
       m_Calls: []
-  myAgent: {fileID: 0}
-  myHand: {fileID: 0}
 --- !u!65 &1821713146044391905
 BoxCollider:
   m_ObjectHideFlags: 0

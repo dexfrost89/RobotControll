@@ -16,7 +16,7 @@ public class ForHand : MonoBehaviour
     {
         if(other.tag == "target")
         {
-            other.GetComponent<TargetController>().SetHand(gameObject);
+            //other.GetComponent<TargetController>().SetHand(gameObject);
         }
     }
 
