@@ -12,9 +12,9 @@ public class walkerAgent : Agent
 
 
     //The walking speed to try and achieve
-    private float m_TargetWalkingSpeed = m_maxWalkingSpeed;
+    private float m_TargetWalkingSpeed = m_maxWalkingSpeed; // целевая скорость к которой агент должен стремиться. Используется только в сценариях, где агент должен перемещаться
 
-    const float m_maxWalkingSpeed = 15; //The max walking speed
+    const float m_maxWalkingSpeed = 15; // Максимальная скорость которую агенту разрешено развивать
 
     //The current target walking speed. Clamped because a value of zero will cause NaNs
     public float TargetWalkingSpeed
@@ -26,7 +26,7 @@ public class walkerAgent : Agent
     //Should the agent sample a new goal velocity each episode?
     //If true, TargetWalkingSpeed will be randomly set between 0.1 and m_maxWalkingSpeed in OnEpisodeBegin()
     //If false, the goal velocity will be m_maxWalkingSpeed
-    private bool m_RandomizeWalkSpeedEachEpisode;
+    private bool m_RandomizeWalkSpeedEachEpisode; 
 
     //The direction an agent will walk during training.
     [Header("Target To Walk Towards")] public Transform dynamicTargetPrefab; //Target prefab to use in Dynamic envs
@@ -35,17 +35,18 @@ public class walkerAgent : Agent
 
     //This will be used as a stabilized model space reference point for observations
     //Because ragdolls can move erratically during training, using a stabilized reference transform improves learning
-    OrientationCubeController m_OrientationCube;
+    OrientationCubeController m_OrientationCube; // объект который всегда направлен в сторону цели
 
-    [Header("Body Parts")] [Space(10)] public Transform body;
-    public Transform joint1;
-    public Transform leg1;
-    public Transform foreJoint1;
-    public Transform foreLeg1;
-    public Transform footJoint1;
-    public Transform foot1;
-    public Transform foreFootJoint1;
-    public Transform joint2;
+    [Header("Body Parts")] [Space(10)] public Transform body; // Transform - компонента которая хранит об объекте инфу о положении, поворотах и скейле.
+    //body ссылается на параллелепипид тела
+    public Transform joint1; // самый верхний сустав первой ноги который прикрпелён к телу
+    public Transform leg1; // самая первая кость первой ноги которая цепляется к первому суставу
+    public Transform foreJoint1; // коленный сустав первой ноги которая цепляется к первой кости
+    public Transform foreLeg1; // вторая кость первой ноги которая цепляется к коленному суставу
+    public Transform footJoint1; // сустав который связывает вторую кость и ступню
+    public Transform foot1; // кость ступни
+    public Transform foreFootJoint1; // наконечник на кости ступни
+    public Transform joint2; // аналогично для ног 2, 3 и 4
     public Transform leg2;
     public Transform foreJoint2;
     public Transform foreLeg2;
@@ -79,16 +80,16 @@ public class walkerAgent : Agent
     public Transform phalanx4;
     public Transform forePhalanx4;*/
 
-    public GameObject head;
+    public GameObject head; // объект головы. Использовался чтобы понять, куда агент смотрит
 
-    JointDriveController m_JdController;
+    JointDriveController m_JdController; // юнитёвый компонент управления суставами.
 
-    public bool touched;
+    public bool touched; // true, если агент дотрагивается до цели
 
-    public bool posing;
+    public bool posing; // true, если агент должен принимать какую-то определённую позу
 
     
-    public override void Initialize()
+    public override void Initialize() // функция которая вызывается в начале запуска эксперимента. Устанавливает связи, инициализирует таргеты итп
     {/*
         action1 = -1f;
         action2 = -1f;
@@ -161,13 +162,13 @@ public class walkerAgent : Agent
     }
 
 
-    void SpawnTarget(Transform prefab, Vector3 pos)
+    void SpawnTarget(Transform prefab, Vector3 pos) // спавнит целевой кубик
     {
         m_Target = Instantiate(prefab, pos, Quaternion.identity, transform);
-        m_Target.GetComponent<TargetController>().walker_agent = this;
+        //m_Target.GetComponent<TargetController>().walker_agent = this;
     }
 
-    public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
+    public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor) // для заданной части тела собирает его наблюдения
     {
         //GROUND CHECK
         sensor.AddObservation(bp.groundContact.touchingGround); // Is this bp touching the ground
@@ -178,7 +179,7 @@ public class walkerAgent : Agent
         }
     }
 
-    public override void OnEpisodeBegin()
+    public override void OnEpisodeBegin() // функция запускается в начале каждого эпизода(эпизод длится 4000 шагов). НЕ РАВНО ЭПИЗОДАМ ОБУЧЕНИЯ
     {
         foreach (var bodyPart in m_JdController.bodyPartsDict.Values)
         {
@@ -201,7 +202,7 @@ public class walkerAgent : Agent
     /// <summary>
     /// Loop over body parts to add them to observation.
     /// </summary>
-    public override void CollectObservations(VectorSensor sensor)
+    public override void CollectObservations(VectorSensor sensor) // функция которая собирает сразу все наблюдения для агентов
     {
         var cubeForward = m_OrientationCube.transform.forward;
 
@@ -272,7 +273,7 @@ public class walkerAgent : Agent
      }
     */
     public bool test;
-    public override void OnActionReceived(ActionBuffers actionBuffers)
+    public override void OnActionReceived(ActionBuffers actionBuffers) // функция вызывается каждый раз когда агент выполняет действия (в нашем случае зачастую каждый шаг)
     {
         var bpDict = m_JdController.bodyPartsDict;
         if (!test)
@@ -336,7 +337,7 @@ public class walkerAgent : Agent
         }
     }*/
 
-    public override void Heuristic(in ActionBuffers actionsOut)
+    public override void Heuristic(in ActionBuffers actionsOut) // функция которая используется для поведения агента, если агент не учится и у него нет обученных поведений
     {
         var continuousActionsOut = actionsOut.ContinuousActions;
         /*
@@ -353,7 +354,7 @@ public class walkerAgent : Agent
             //Debug.Log(continuousActionsOut[i]);
         }
     }
-    void FixedUpdate()
+    void FixedUpdate() // функция вызывается каждый тик среды. Тут мы вычисляем и добавляем награду.
     {
         //head.transform.position = body.position + body.right;
         angle += speed * Time.fixedDeltaTime;
@@ -378,7 +379,7 @@ public class walkerAgent : Agent
         //This reward will approach 1 if it faces the target direction perfectly and approach zero as it deviates
         var lookAtTargetReward = (Vector3.Dot(cubeForward, body.right) + 1) * 0.5f;
 
-        AddReward(matchSpeedReward * lookAtTargetReward);
+        AddReward(matchSpeedReward * lookAtTargetReward); // эта функция даёт агенту награду.
     }
     void UpdateOrientationObjects()
     {
