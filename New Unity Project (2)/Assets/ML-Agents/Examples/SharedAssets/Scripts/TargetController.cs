@@ -47,7 +47,7 @@ namespace Unity.MLAgentsExamples
         public CollisionEvent onCollisionEnterEvent = new CollisionEvent();
         public CollisionEvent onCollisionStayEvent = new CollisionEvent();
         public CollisionEvent onCollisionExitEvent = new CollisionEvent();
-        public walkerAgent walker_agent;
+        public SpiderAgent walker_agent;
 
         // Start is called before the first frame update
         void OnEnable()
@@ -76,7 +76,7 @@ namespace Unity.MLAgentsExamples
         /// </summary>
         public void MoveTargetToRandomPosition()
         {
-            var newTargetPos = m_startingPos + new Vector3(1.0f * spawnRadius, 0, 0);
+            var newTargetPos = m_startingPos + (Random.insideUnitSphere * spawnRadius);
             newTargetPos.y = m_startingPos.y;
             transform.position = newTargetPos;
         }

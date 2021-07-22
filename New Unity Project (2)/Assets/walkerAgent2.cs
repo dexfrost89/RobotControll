@@ -7,14 +7,14 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgentsExamples;
 using Unity.MLAgents.Sensors;
 
-public class walkerAgent : Agent
+public class walkerAgent2 : Agent
 {
 
 
     //The walking speed to try and achieve
-    private float m_TargetWalkingSpeed = m_maxWalkingSpeed; // целевая скорость к которой агент должен стремиться. Используется только в сценариях, где агент должен перемещаться
+    private float m_TargetWalkingSpeed = m_maxWalkingSpeed;
 
-    const float m_maxWalkingSpeed = 15; // Максимальная скорость которую агенту разрешено развивать
+    const float m_maxWalkingSpeed = 15; //The max walking speed
 
     //The current target walking speed. Clamped because a value of zero will cause NaNs
     public float TargetWalkingSpeed
@@ -26,47 +26,46 @@ public class walkerAgent : Agent
     //Should the agent sample a new goal velocity each episode?
     //If true, TargetWalkingSpeed will be randomly set between 0.1 and m_maxWalkingSpeed in OnEpisodeBegin()
     //If false, the goal velocity will be m_maxWalkingSpeed
-    private bool m_RandomizeWalkSpeedEachEpisode; 
+    private bool m_RandomizeWalkSpeedEachEpisode;
 
     //The direction an agent will walk during training.
     [Header("Target To Walk Towards")] public Transform dynamicTargetPrefab; //Target prefab to use in Dynamic envs
-    public Transform staticTargetPrefab; //Target prefab to use in Static envs
-    private Transform m_Target; //Target the agent will walk towards during training.
+    //public Transform staticTargetPrefab; //Target prefab to use in Static envs
+    //private Transform m_Target; //Target the agent will walk towards during training.
 
     //This will be used as a stabilized model space reference point for observations
     //Because ragdolls can move erratically during training, using a stabilized reference transform improves learning
-    OrientationCubeController m_OrientationCube; // объект который всегда направлен в сторону цели
+    //OrientationCubeController m_OrientationCube;
 
-    [Header("Body Parts")] [Space(10)] public Transform body; // Transform - компонента которая хранит об объекте инфу о положении, поворотах и скейле.
-    //body ссылается на параллелепипид тела
-    public Transform joint1; // самый верхний сустав первой ноги который прикрпелён к телу
-    public Transform leg1; // самая первая кость первой ноги которая цепляется к первому суставу
-    public Transform foreJoint1; // коленный сустав первой ноги которая цепляется к первой кости
-    public Transform foreLeg1; // вторая кость первой ноги которая цепляется к коленному суставу
-    public Transform footJoint1; // сустав который связывает вторую кость и ступню
-    public Transform foot1; // кость ступни
-    public Transform foreFootJoint1; // наконечник на кости ступни
-    public Transform joint2; // аналогично для ног 2, 3 и 4
+    [Header("Body Parts")] [Space(10)] public Transform body;
+    public Transform joint1;
+    public Transform leg1;
+    public Transform foreJoint1;
+    public Transform foreLeg1;
+    public Transform footJoint1;
+    public Transform joint2;
     public Transform leg2;
     public Transform foreJoint2;
     public Transform foreLeg2;
     public Transform footJoint2;
-    public Transform foot2;
-    public Transform foreFootJoint2;
     public Transform joint3;
     public Transform leg3;
     public Transform foreJoint3;
     public Transform foreLeg3;
     public Transform footJoint3;
-    public Transform foot3;
-    public Transform foreFootJoint3;
     public Transform joint4;
     public Transform leg4;
     public Transform foreJoint4;
     public Transform foreLeg4;
     public Transform footJoint4;
-    public Transform foot4;
-    public Transform foreFootJoint4;
+    public Transform ball1;
+    public Transform ball2;
+    public Transform ball3;
+    public Transform ball4;
+    public Transform legBall1;
+    public Transform legBall2;
+    public Transform legBall3;
+    public Transform legBall4;
     /*public Transform finger1;
     public Transform phalanx1;
     public Transform forePhalanx1;
@@ -79,17 +78,28 @@ public class walkerAgent : Agent
     public Transform finger4;
     public Transform phalanx4;
     public Transform forePhalanx4;*/
+    public List<Vector4> poseSaves;
 
-    public GameObject head; // объект головы. Использовался чтобы понять, куда агент смотрит
+    public GameObject head;
 
-    JointDriveController m_JdController; // юнитёвый компонент управления суставами.
+    JointDriveController m_JdController;
 
-    public bool touched; // true, если агент дотрагивается до цели
+    public bool touched;
 
-    public bool posing; // true, если агент должен принимать какую-то определённую позу
+    public bool posing;
 
-    public float delay;
-    public override void Initialize() // функция которая вызывается в начале запуска эксперимента. Устанавливает связи, инициализирует таргеты итп
+    public Vector3 previous_pos1;
+    public Vector3 previous_pos2;
+    public Vector3 previous_pos3;
+    public Vector3 previous_pos4;
+
+    public Vector3 previous_vel1;
+    public Vector3 previous_vel2;
+    public Vector3 previous_vel3;
+    public Vector3 previous_vel4;
+
+
+    public override void Initialize()
     {/*
         action1 = -1f;
         action2 = -1f;
@@ -106,8 +116,8 @@ public class walkerAgent : Agent
         gobj = Instantiate(tc.gameObject, transform);
         gobj.GetComponent<TargetController>().m_startingPos = transform.position;*/
 
-        SpawnTarget(dynamicTargetPrefab, transform.position);
-        m_OrientationCube = GetComponentInChildren<OrientationCubeController>();
+        //SpawnTarget(dynamicTargetPrefab, transform.position);
+        //m_OrientationCube = GetComponentInChildren<OrientationCubeController>();
 
         //head = Instantiate(head);
 
@@ -123,29 +133,21 @@ public class walkerAgent : Agent
         m_JdController.SetupBodyPart(foreJoint1);
         m_JdController.SetupBodyPart(foreLeg1);
         m_JdController.SetupBodyPart(footJoint1);
-        m_JdController.SetupBodyPart(foot1);
-        m_JdController.SetupBodyPart(foreFootJoint1);
         m_JdController.SetupBodyPart(joint2);
         m_JdController.SetupBodyPart(leg2);
         m_JdController.SetupBodyPart(foreJoint2);
         m_JdController.SetupBodyPart(foreLeg2);
         m_JdController.SetupBodyPart(footJoint2);
-        m_JdController.SetupBodyPart(foot2);
-        m_JdController.SetupBodyPart(foreFootJoint2);
         m_JdController.SetupBodyPart(joint3);
         m_JdController.SetupBodyPart(leg3);
         m_JdController.SetupBodyPart(foreJoint3);
         m_JdController.SetupBodyPart(foreLeg3);
         m_JdController.SetupBodyPart(footJoint3);
-        m_JdController.SetupBodyPart(foot3);
-        m_JdController.SetupBodyPart(foreFootJoint3);
         m_JdController.SetupBodyPart(joint4);
         m_JdController.SetupBodyPart(leg4);
         m_JdController.SetupBodyPart(foreJoint4);
         m_JdController.SetupBodyPart(foreLeg4);
         m_JdController.SetupBodyPart(footJoint4);
-        m_JdController.SetupBodyPart(foot4);
-        m_JdController.SetupBodyPart(foreFootJoint4);
         /*
         m_JdController.SetupBodyPart(finger1);
         m_JdController.SetupBodyPart(phalanx1);
@@ -162,13 +164,13 @@ public class walkerAgent : Agent
     }
 
 
-    void SpawnTarget(Transform prefab, Vector3 pos) // спавнит целевой кубик
+    void SpawnTarget(Transform prefab, Vector3 pos)
     {
-        m_Target = Instantiate(prefab, pos, Quaternion.identity, transform);
+        //m_Target = Instantiate(prefab, pos, Quaternion.identity, transform);
         //m_Target.GetComponent<TargetController>().walker_agent = this;
     }
 
-    public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor) // для заданной части тела собирает его наблюдения
+    public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
     {
         //GROUND CHECK
         sensor.AddObservation(bp.groundContact.touchingGround); // Is this bp touching the ground
@@ -179,15 +181,30 @@ public class walkerAgent : Agent
         }
     }
 
-    public override void OnEpisodeBegin() // функция запускается в начале каждого эпизода(эпизод длится 4000 шагов). НЕ РАВНО ЭПИЗОДАМ ОБУЧЕНИЯ
+    public float delay;
+
+    public override void OnEpisodeBegin()
     {
         foreach (var bodyPart in m_JdController.bodyPartsDict.Values)
         {
             bodyPart.Reset(bodyPart);
         }
 
+        //joint1.rotation.SetEulerAngles(0, 0, -87f);
+        //joint2.rotation.SetEulerAngles(0, 0, -87f);
+        //joint3.rotation.SetEulerAngles(0, 0, -87f);
+        //joint4.rotation.SetEulerAngles(0, 0, -87f);
+
+        //foreJoint1.rotation.SetEulerAngles(0, 0, 160f);
+
+        //foreJoint2.rotation.SetEulerAngles(0, 0, 160f);
+
+        //foreJoint3.rotation.SetEulerAngles(0, 0, 160f);
+
+        //foreJoint4.rotation.SetEulerAngles(0, 0, 160f);
+
         //Random start rotation to help generalize
-        body.position = gameObject.transform.position + new Vector3(0, 1, 0);
+        body.position = gameObject.transform.position + new Vector3(0, 1.5f, 0);
         body.rotation = Quaternion.Euler(0, 0, 0);
 
         UpdateOrientationObjects();
@@ -195,6 +212,16 @@ public class walkerAgent : Agent
         //Set our goal walking speed
         TargetWalkingSpeed =
             m_RandomizeWalkSpeedEachEpisode ? Random.Range(0.1f, m_maxWalkingSpeed) : TargetWalkingSpeed;
+        delay = Time.time;
+
+        previous_pos1 = ball1.position;
+        previous_pos2 = ball2.position;
+        previous_pos3 = ball3.position;
+        previous_pos4 = ball4.position;
+        previous_vel1 = new Vector3(0, 0, 0);
+        previous_vel2 = new Vector3(0, 0, 0);
+        previous_vel3 = new Vector3(0, 0, 0);
+        previous_vel4 = new Vector3(0, 0, 0);
     }
 
     public int i1, i2;
@@ -202,26 +229,26 @@ public class walkerAgent : Agent
     /// <summary>
     /// Loop over body parts to add them to observation.
     /// </summary>
-    public override void CollectObservations(VectorSensor sensor) // функция которая собирает сразу все наблюдения для агентов
+    public override void CollectObservations(VectorSensor sensor)
     {
-        var cubeForward = m_OrientationCube.transform.forward;
+        //var cubeForward = m_OrientationCube.transform.forward;
 
         //velocity we want to match
-        var velGoal = cubeForward * TargetWalkingSpeed;
+        //var velGoal = cubeForward * TargetWalkingSpeed;
         //ragdoll's avg vel
-        var avgVel = GetAvgVelocity();
+        //var avgVel = GetAvgVelocity();
 
         //current ragdoll velocity. normalized
-        sensor.AddObservation(Vector3.Distance(velGoal, avgVel));
+        //sensor.AddObservation(Vector3.Distance(velGoal, avgVel));
         //avg body vel relative to cube
-        sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(avgVel));
+        //ensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(avgVel));
         //vel goal relative to cube
-        sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(velGoal));
+        //sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(velGoal));
         //rotation delta
-        sensor.AddObservation(Quaternion.FromToRotation(body.right, cubeForward));
+        //sensor.AddObservation(Quaternion.FromToRotation(body.right, cubeForward));
 
         //Add pos of target relative to orientation cube
-        sensor.AddObservation(m_OrientationCube.transform.InverseTransformPoint(m_Target.transform.position));
+        //sensor.AddObservation(m_OrientationCube.transform.InverseTransformPoint(m_Target.transform.position));
 
         RaycastHit hit;
         float maxRaycastDist = 10;
@@ -236,6 +263,16 @@ public class walkerAgent : Agent
         {
             CollectObservationBodyPart(bodyPart, sensor);
         }
+
+        sensor.AddObservation(ball1.position.y - 1.5f);
+        sensor.AddObservation(ball2.position.y - 1.5f);
+        sensor.AddObservation(ball3.position.y - 1.5f);
+        sensor.AddObservation(ball4.position.y - 1.5f);
+
+        sensor.AddObservation(footJoint1.position.y);
+        sensor.AddObservation(footJoint2.position.y);
+        sensor.AddObservation(footJoint3.position.y);
+        sensor.AddObservation(footJoint4.position.y);
     }
 
     //public Vector3 previous_target_pos, next_target_pos;
@@ -273,32 +310,45 @@ public class walkerAgent : Agent
      }
     */
     public bool test;
-    public override void OnActionReceived(ActionBuffers actionBuffers) // функция вызывается каждый раз когда агент выполняет действия (в нашем случае зачастую каждый шаг)
+
+    public float Discretize(float a, float b)
+    {
+        return Mathf.Round(a * b / 2f) / b * 2f;
+    }
+
+    public float DiscreteToFloat(int a, int b)
+    {
+        int normalizer = b / 2;
+        int norm_action = a - normalizer - 1;
+        return ((float)norm_action) / ((float)normalizer);
+    }
+    public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         var bpDict = m_JdController.bodyPartsDict;
-        if (!test)
+        if (!test && Time.time > delay)
         {
             // The dictionary with all the body parts in it are in the jdController
 
             var continuousActions = actionBuffers.ContinuousActions;
+            var discreteActions = actionBuffers.DiscreteActions;
             var i = -1;
 
-            bpDict[joint1].SetJointTargetRotation(continuousActions[++i], 0, continuousActions[++i]);
-            bpDict[joint3].SetJointTargetRotation(continuousActions[i], 0, continuousActions[i]);
-            bpDict[foreJoint1].SetJointTargetRotation(0, 0, continuousActions[++i]);
-            bpDict[foreJoint3].SetJointTargetRotation(0, 0, continuousActions[i]);
-            bpDict[footJoint1].SetJointTargetRotation(0, 0, continuousActions[++i]);
-            bpDict[footJoint3].SetJointTargetRotation(0, 0, continuousActions[i]);
+            //bpDict[joint1].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            //bpDict[joint3].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            bpDict[joint1].SetJointTargetRotation(Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f));
+            bpDict[joint3].SetJointTargetRotation(Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f));
+            bpDict[foreJoint1].SetJointTargetRotation(0, 0, Discretize(continuousActions[++i], 8f));
+            bpDict[foreJoint3].SetJointTargetRotation(0, 0, Discretize(continuousActions[++i], 8f));
             //bpDict[foot1].SetJointTargetRotation(continuousActions[++i], 0, 0);
-            bpDict[joint2].SetJointTargetRotation(continuousActions[++i], 0, continuousActions[++i]);
-            bpDict[joint4].SetJointTargetRotation(continuousActions[i], 0, continuousActions[i]);
-            bpDict[foreJoint2].SetJointTargetRotation(0, 0, continuousActions[++i]);
-            bpDict[foreJoint4].SetJointTargetRotation(0, 0, continuousActions[i]);
-            bpDict[footJoint2].SetJointTargetRotation(0, 0, continuousActions[++i]);
-            bpDict[footJoint4].SetJointTargetRotation(0, 0, continuousActions[i]);
+            //bpDict[joint2].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            //bpDict[joint4].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            bpDict[joint2].SetJointTargetRotation(Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f));
+            bpDict[joint4].SetJointTargetRotation(Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f), Discretize(continuousActions[++i], 8f));
+            bpDict[foreJoint2].SetJointTargetRotation(0, 0, Discretize(continuousActions[++i], 8f));
+            bpDict[foreJoint4].SetJointTargetRotation(0, 0, Discretize(continuousActions[++i], 8f));
             //bpDict[foot3].SetJointTargetRotation(continuousActions[++i], 0, 0);
             //bpDict[foot4].SetJointTargetRotation(continuousActions[++i], 0, 0);
-
+            /*
             bpDict[joint1].SetJointStrength(continuousActions[++i]);
             bpDict[joint3].SetJointStrength(continuousActions[i]);
             bpDict[foreJoint1].SetJointStrength(continuousActions[++i]);
@@ -311,16 +361,65 @@ public class walkerAgent : Agent
             bpDict[foreJoint2].SetJointStrength(continuousActions[++i]);
             bpDict[foreJoint4].SetJointStrength(continuousActions[i]);
             bpDict[footJoint2].SetJointStrength(continuousActions[++i]);
-            bpDict[footJoint4].SetJointStrength(continuousActions[i]);
+            bpDict[footJoint4].SetJointStrength(continuousActions[i]);*/
+            bpDict[joint1].SetJointStrength(continuousActions[++i]);
+            bpDict[joint3].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint1].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint3].SetJointStrength(continuousActions[++i]);
+            //bpDict[foot1].SetJointStrength(continuousActions[++i]);
+            bpDict[joint2].SetJointStrength(continuousActions[++i]);
+            bpDict[joint4].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint2].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint4].SetJointStrength(continuousActions[++i]);
             //bpDict[foot2].SetJointStrength(continuousActions[++i]);
             //bpDict[foot3].SetJointStrength(continuousActions[++i]);
             //bpDict[foot4].SetJointStrength(continuousActions[++i]);
-        }
-        else
+        } else
         {
-            bpDict[joint4].SetJointTargetRotation(angle, 0, 0);
-            bpDict[joint4].SetJointStrength(1.0f);
 
+            // The dictionary with all the body parts in it are in the jdController
+
+            var continuousActions = actionBuffers.ContinuousActions;
+            var i = -1;
+
+            //bpDict[joint1].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            //bpDict[joint3].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            bpDict[joint1].SetJointTargetRotation(0, 0, 1f);
+            bpDict[joint3].SetJointTargetRotation(0, 0, 1f);
+            bpDict[foreJoint1].SetJointTargetRotation(0, 0, -1f);
+            bpDict[foreJoint3].SetJointTargetRotation(0, 0, -1f);
+            //bpDict[foot1].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            //bpDict[joint2].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            //bpDict[joint4].SetJointTargetRotation(Discretize(continuousActions[++i], 55f), Discretize(continuousActions[++i], 40f), Discretize(continuousActions[++i], 174f));
+            bpDict[joint2].SetJointTargetRotation(0, 0, 1f);
+            bpDict[joint4].SetJointTargetRotation(0, 0, 1f);
+            bpDict[foreJoint2].SetJointTargetRotation(0, 0, -1f);
+            bpDict[foreJoint4].SetJointTargetRotation(0, 0, -1f);
+            //bpDict[foot3].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            //bpDict[foot4].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            /*
+            bpDict[joint1].SetJointStrength(continuousActions[++i]);
+            bpDict[joint3].SetJointStrength(continuousActions[i]);
+            bpDict[foreJoint1].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint3].SetJointStrength(continuousActions[i]);
+            bpDict[footJoint1].SetJointStrength(continuousActions[++i]);
+            bpDict[footJoint3].SetJointStrength(continuousActions[i]);
+            //bpDict[foot1].SetJointStrength(continuousActions[++i]);
+            bpDict[joint2].SetJointStrength(continuousActions[++i]);
+            bpDict[joint4].SetJointStrength(continuousActions[i]);
+            bpDict[foreJoint2].SetJointStrength(continuousActions[++i]);
+            bpDict[foreJoint4].SetJointStrength(continuousActions[i]);
+            bpDict[footJoint2].SetJointStrength(continuousActions[++i]);
+            bpDict[footJoint4].SetJointStrength(continuousActions[i]);*/
+            bpDict[joint1].SetJointStrength(1f);
+            bpDict[joint3].SetJointStrength(1f);
+            bpDict[foreJoint1].SetJointStrength(1f);
+            bpDict[foreJoint3].SetJointStrength(1f);
+            //bpDict[foot1].SetJointStrength(continuousActions[++i]);
+            bpDict[joint2].SetJointStrength(1f);
+            bpDict[joint4].SetJointStrength(1f);
+            bpDict[foreJoint2].SetJointStrength(1f);
+            bpDict[foreJoint4].SetJointStrength(1f);
         }
     }
 
@@ -337,7 +436,7 @@ public class walkerAgent : Agent
         }
     }*/
 
-    public override void Heuristic(in ActionBuffers actionsOut) // функция которая используется для поведения агента, если агент не учится и у него нет обученных поведений
+    public override void Heuristic(in ActionBuffers actionsOut)
     {
         var continuousActionsOut = actionsOut.ContinuousActions;
         /*
@@ -348,13 +447,43 @@ public class walkerAgent : Agent
                 continuousActionsOut[i] = -0.9f;//Random.Range(-1f, 1f);*/
         /*for (int i = 0; i < 17; i++)
             continuousActionsOut[i] = Random.Range(-1f, 1f);*/
-        for (int i = 0; i < 14; i++)
+        /*for (int i = 0; i < 14; i++)
         {
-            continuousActionsOut[i] = Random.Range(-1f, 1f);
+            continuousActionsOut[i] = 0f;
+            //continuousActionsOut[i] = Random.Range(-1f, 1f);
             //Debug.Log(continuousActionsOut[i]);
-        }
+        }*/
+        i1 = -1;
+        //continuousActionsOut[++i1] = 20f / 55f - 1f;
+        //continuousActionsOut[++i1] = 0f;
+        //continuousActionsOut[++i1] = 0f;
+        continuousActionsOut[++i1] = -1f;
+        //continuousActionsOut[++i1] = 90f / 55f - 1f;
+        //continuousActionsOut[++i1] = 0f;
+        //continuousActionsOut[++i1] = 0f;
+        continuousActionsOut[++i1] = -1f;
+        continuousActionsOut[++i1] = -1f;
+        continuousActionsOut[++i1] = -1f;
+        //continuousActionsOut[++i1] = 90f / 55f - 1f;
+        //continuousActionsOut[++i1] = 0f;
+        //continuousActionsOut[++i1] = 0f;
+        continuousActionsOut[++i1] = -1f;
+        //continuousActionsOut[++i1] = 20f / 55f - 1f;
+        //continuousActionsOut[++i1] = 0f;
+        //continuousActionsOut[++i1] = 0f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = -1f;
+        continuousActionsOut[++i1] = -1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
+        continuousActionsOut[++i1] = 1f;
     }
-    void FixedUpdate() // функция вызывается каждый тик среды. Тут мы вычисляем и добавляем награду.
+    void FixedUpdate()
     {
         //head.transform.position = body.position + body.right;
         angle += speed * Time.fixedDeltaTime;
@@ -368,22 +497,90 @@ public class walkerAgent : Agent
         }
         UpdateOrientationObjects();
 
-        var cubeForward = m_OrientationCube.transform.forward;
+        //var cubeForward = m_OrientationCube.transform.forward;
 
         // Set reward for this step according to mixture of the following elements.
         // a. Match target speed
         //This reward will approach 1 if it matches perfectly and approach zero as it deviates
-        var matchSpeedReward = GetMatchingVelocityReward(cubeForward * TargetWalkingSpeed, GetAvgVelocity());
+        //var matchSpeedReward = GetMatchingVelocityReward(cubeForward * TargetWalkingSpeed, GetAvgVelocity());
 
         // b. Rotation alignment with target direction.
         //This reward will approach 1 if it faces the target direction perfectly and approach zero as it deviates
-        var lookAtTargetReward = (Vector3.Dot(cubeForward, body.right) + 1) * 0.5f;
+        //var lookAtTargetReward = (Vector3.Dot(cubeForward, body.right) + 1) * 0.5f;
 
-        //AddReward(matchSpeedReward * lookAtTargetReward); // эта функция даёт агенту награду.
+        //AddReward(matchSpeedReward * lookAtTargetReward);
+        //AddReward(Mathf.Cos(body.rotation.eulerAngles.x * Mathf.PI) * Mathf.Cos(body.rotation.eulerAngles.y * Mathf.PI) * Mathf.Cos(body.rotation.eulerAngles.z * Mathf.PI));
+
+        Vector3 cur_vel1 = ball1.position - previous_pos1;
+        Vector3 cur_vel2 = ball2.position - previous_pos2;
+        Vector3 cur_vel3 = ball3.position - previous_pos3;
+        Vector3 cur_vel4 = ball4.position - previous_pos4;
+
+        cur_vel1.y = 0;
+        cur_vel2.y = 0;
+        cur_vel3.y = 0;
+        cur_vel4.y = 0;
+
+
+        float grounded_num = 0;
+
+        foreach (var bodyPart in m_JdController.bodyPartsList)
+        {
+            if (bodyPart.rb.transform == footJoint1 || bodyPart.rb.transform == footJoint2 || bodyPart.rb.transform == footJoint3 || bodyPart.rb.transform == footJoint4)
+            {
+                if (bodyPart.groundContact.touchingGround)
+                {
+                    grounded_num += 1f;
+                }
+            }
+        }
+
+        float leg_penalty = 0.0f;
+
+        if(grounded_num < 4)
+        {
+            leg_penalty = 1.0f;
+        }
+
+        /*AddReward((Mathf.Exp(-Mathf.Abs(ball1.position.y - 1.5f)) + Mathf.Exp(-Mathf.Abs(ball2.position.y - 1.5f)) + Mathf.Exp(-Mathf.Abs(ball3.position.y - 1.5f)) +
+            Mathf.Exp(-Mathf.Abs(ball4.position.y - 1.5f)) - 2f) / 2f - Mathf.Pow(cur_vel1.magnitude, 2) - Mathf.Pow(cur_vel2.magnitude, 2) -
+            Mathf.Pow(cur_vel3.magnitude, 2) - Mathf.Pow(cur_vel4.magnitude, 2) +
+            Vector3.Dot(cur_vel1.normalized, previous_vel1.normalized) / 2f + Vector3.Dot(cur_vel2.normalized, previous_vel2.normalized) / 2f +
+            Vector3.Dot(cur_vel3.normalized, previous_vel3.normalized) / 2f + Vector3.Dot(cur_vel4.normalized, previous_vel4.normalized) / 2f - 4f);*/
+
+        AddReward((Mathf.Exp(-Mathf.Abs(ball1.position.y - 1.5f)) + Mathf.Exp(-Mathf.Abs(ball2.position.y - 1.5f)) + Mathf.Exp(-Mathf.Abs(ball3.position.y - 1.5f)) +
+            Mathf.Exp(-Mathf.Abs(ball4.position.y - 1.5f)) - 2f) / 2f - leg_penalty);
+        float heightMean = ball1.position.y + ball2.position.y + ball3.position.y + ball4.position.y;
+        heightMean /= 4f;
+
+        float dispersion = Mathf.Sqrt((Mathf.Pow(heightMean - ball1.position.y, 2) + Mathf.Pow(heightMean - ball2.position.y, 2) + Mathf.Pow(heightMean - ball3.position.y, 2) + Mathf.Pow(heightMean - ball4.position.y, 2)) / 4f);
+        //AddReward(-leg_penalty);
+
+        Vector3 velocity1 = (previous_pos1 - legBall1.position);
+        Vector3 velocity2 = (previous_pos2 - legBall2.position);
+        Vector3 velocity3 = (previous_pos3 - legBall3.position);
+        Vector3 velocity4 = (previous_pos4 - legBall4.position);
+
+        //AddReward(- dispersion - velocity1.magnitude - velocity2.magnitude - velocity3.magnitude - velocity4.magnitude);
+
+        previous_pos1 = legBall1.position;
+        previous_pos2 = legBall2.position;
+        previous_pos3 = legBall3.position;
+        previous_pos4 = legBall4.position;
+
+
+
+        previous_vel1 = velocity1;
+        previous_vel2 = velocity2;
+        previous_vel3 = velocity3;
+        previous_vel4 = velocity4;
+
+
+        //Debug.Log(grounded_num);
     }
     void UpdateOrientationObjects()
     {
-        m_OrientationCube.UpdateOrientation(body, m_Target);
+        //m_OrientationCube.UpdateOrientation(body, m_Target);
         /*if (m_DirectionIndicator)
         {
             m_DirectionIndicator.MatchOrientation(m_OrientationCube.transform);

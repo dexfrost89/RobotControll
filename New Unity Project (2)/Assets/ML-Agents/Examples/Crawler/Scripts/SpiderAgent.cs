@@ -99,6 +99,7 @@ public class SpiderAgent : Agent
     void SpawnTarget(Transform prefab, Vector3 pos)
     {
         m_Target = Instantiate(prefab, pos, Quaternion.identity, transform);
+        m_Target.GetComponent<TargetController>().walker_agent = this;
     }
 
     /// <summary>
@@ -110,6 +111,7 @@ public class SpiderAgent : Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
+        delay_time = Time.time;
         foreach (var bodyPart in m_JdController.bodyPartsDict.Values)
         {
             bodyPart.Reset(bodyPart);
@@ -180,32 +182,38 @@ public class SpiderAgent : Agent
         }
     }
 
+    float delay_time;
+
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        // The dictionary with all the body parts in it are in the jdController
-        var bpDict = m_JdController.bodyPartsDict;
+        if (Time.time > delay_time)
+        {
+            // The dictionary with all the body parts in it are in the jdController
+            var bpDict = m_JdController.bodyPartsDict;
 
-        var continuousActions = actionBuffers.ContinuousActions;
-        var i = -1;
-        // Pick a new target joint rotation
-        bpDict[leg0Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg1Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg2Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg3Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
-        bpDict[leg0Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
-        bpDict[leg1Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
-        bpDict[leg2Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
-        bpDict[leg3Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            var continuousActions = actionBuffers.ContinuousActions;
+            var i = -1;
+            // Pick a new target joint rotation
+            bpDict[leg0Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
+            bpDict[leg1Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
+            bpDict[leg2Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
+            bpDict[leg3Upper].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
+            bpDict[leg0Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            bpDict[leg1Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            bpDict[leg2Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
+            bpDict[leg3Lower].SetJointTargetRotation(continuousActions[++i], 0, 0);
 
-        // Update joint strength
-        bpDict[leg0Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg1Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg2Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg3Upper].SetJointStrength(continuousActions[++i]);
-        bpDict[leg0Lower].SetJointStrength(continuousActions[++i]);
-        bpDict[leg1Lower].SetJointStrength(continuousActions[++i]);
-        bpDict[leg2Lower].SetJointStrength(continuousActions[++i]);
-        bpDict[leg3Lower].SetJointStrength(continuousActions[++i]);
+            // Update joint strength
+            bpDict[leg0Upper].SetJointStrength(continuousActions[++i]);
+            bpDict[leg1Upper].SetJointStrength(continuousActions[++i]);
+            bpDict[leg2Upper].SetJointStrength(continuousActions[++i]);
+            bpDict[leg3Upper].SetJointStrength(continuousActions[++i]);
+            bpDict[leg0Lower].SetJointStrength(continuousActions[++i]);
+            bpDict[leg1Lower].SetJointStrength(continuousActions[++i]);
+            bpDict[leg2Lower].SetJointStrength(continuousActions[++i]);
+            bpDict[leg3Lower].SetJointStrength(continuousActions[++i]);
+            //delay_time = Time.time + 0.5f;
+        }
     }
 
     void FixedUpdate()
